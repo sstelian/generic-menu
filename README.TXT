@@ -1,4 +1,4 @@
-g It implements the menu as a tree
+It implements the menu as a tree
 using smart pointers and STL containers. It is suitable for use in robotics and
 embedded systems where no proper user interface implementations are available.
 Leaf nodes can have callbacks attached to them in order to interact with items
