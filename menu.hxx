@@ -19,6 +19,9 @@ public:
   std::vector<unique_it_ptr> *children();
   MenuItem* parent();
   void call();
+  bool hasChildren();
+  bool hasParent();
+  MenuItem* child(int index);
 
 private:
   std::string m_name;

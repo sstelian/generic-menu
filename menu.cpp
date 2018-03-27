@@ -22,3 +22,25 @@ void MenuItem::call()
   if (m_action != nullptr)
     m_action();
 }
+
+bool MenuItem::hasChildren()
+{
+  return (m_children.size() > 0);
+}
+
+bool MenuItem::hasParent()
+{
+  return (_parent != nullptr);
+}
+
+MenuItem* MenuItem::child(int index)
+{
+  if (this->hasChildren())
+  {
+    return m_children[index].get();
+  }
+  else
+  {
+    return nullptr;
+  }
+}

@@ -42,12 +42,21 @@ int main()
 
 
   //menu navigation
-
+  cout << "\033c";
   MenuNavigator navigator(root.get(),[](MenuItem * const &selection, int const &selectionIndex){
+    //cout << "\033c";
     auto ch = selection->children();
+    int index = 0;
     for(auto it = ch->begin(); it != ch->end(); it++)
     {
-      cout << (**it).name() << endl;
+      if (index == selectionIndex)
+      {
+        cout << ">" << (**it).name() << endl;
+      } else
+      {
+        cout << " " << (**it).name() << endl;
+      }
+      index++;
     }
   });
 

@@ -2,13 +2,20 @@
 
 void MenuNavigator::forward()
 {
-  if ((selection->children()->size() > 0) && ((*selection->children())[childIndex].get() != nullptr))
+  cout << "\033c";
+  if(selection->hasChildren())
   {
-    selection = (*selection->children())[childIndex].get();
+    if(!(selection->child(childIndex)->hasChildren()))
+    {
+      cout << "\t" << selection->child(childIndex)->name() << endl;
+    }
+  }
+  if (selection->hasChildren())
+  {
+    selection = selection->child(childIndex);
     display(selection, childIndex);
   } else
   {
-    cout << "can't go forward. no children." << endl;
     selection->call();
   }
   childIndex = 0;
@@ -16,25 +23,41 @@ void MenuNavigator::forward()
 
 void MenuNavigator::backward()
 {
-  if (selection->parent() != nullptr)
+  if (selection->hasParent())
   {
+    //cout << "\033c";
     selection = selection->parent();
     auto ch = selection->children();
     display(selection, childIndex);
-  } else
-  {
-    cout << "can't go backward. root." << endl;
   }
 }
 
 void MenuNavigator::up()
 {
-  if (childIndex > 0)
-    childIndex--;
+  if(selection->hasChildren())
+  {
+    if (childIndex > 0)
+    {
+      childIndex--;
+      display(selection, childIndex);
+    }
+  }else
+  {
+    ;//TODO:add up functionality for leaf
+  }
 }
 
 void MenuNavigator::down()
 {
-  if (childIndex < selection->children()->size()-1)
-    childIndex++;
+  if(selection->hasChildren())
+  {
+    if (childIndex < selection->children()->size()-1)
+    {
+      childIndex++;
+      display(selection, childIndex);
+    }
+  } else
+  {
+    ;//TODO:add down functionality for leaf
+  }
 }
