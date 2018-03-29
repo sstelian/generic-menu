@@ -9,9 +9,11 @@ class MenuItem
 {
 public:
   typedef std::unique_ptr<MenuItem> unique_it_ptr;
+  enum leafAction{none, render, up, down};
   MenuItem(const MenuItem&) = delete;
   MenuItem& operator=(const MenuItem&) = delete;
   ~MenuItem() = default;
+  MenuItem() : m_name{} {_parent = nullptr; };
   MenuItem(std::string const &name) : m_name{name}{ _parent = nullptr; };
   MenuItem(std::string const &name, std::function<void ()> action) : m_name{name}, m_action{action} {};
   std::string name() {return m_name;}

@@ -12,6 +12,7 @@ std::vector<MenuItem::unique_it_ptr>* MenuItem::children()
   return &m_children;
 }
 
+
 MenuItem* MenuItem::parent()
 {
   return _parent;

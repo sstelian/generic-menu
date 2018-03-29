@@ -7,12 +7,12 @@ using namespace std;
 class MenuNavigator
 {
   public:
-    typedef std::function<void(MenuItem* const&, int const&)> menu_display_callback;
+    typedef std::function<void(MenuItem* const&, int const&, MenuItem::leafAction const&)> menu_display_callback;
     MenuNavigator(MenuItem *root, menu_display_callback _display) : selection{root},
-                  childIndex{0},
-                  display(_display)
+                  childIndex{},
+                  display{_display}
      {
-       display(selection, childIndex);
+       display(selection, childIndex, MenuItem::leafAction::none);
      };
     void forward();
     void backward();
