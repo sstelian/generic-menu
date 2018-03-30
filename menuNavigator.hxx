@@ -2,17 +2,15 @@
 #include "menu.hxx"
 #include <iostream>
 
-using namespace std;
-
 class MenuNavigator
 {
   public:
-    typedef std::function<void(MenuItem* const&, int const&, MenuItem::leafAction const&)> menu_display_callback;
-    MenuNavigator(MenuItem *root, menu_display_callback _display) : selection{root},
+    typedef std::function<void(MenuItem* const&, int const&)> menu_display_node;
+    MenuNavigator(MenuItem *root, menu_display_node _displayNode) : selection{root},
                   childIndex{},
-                  display{_display}
+                  displayNode{_displayNode}
      {
-       display(selection, childIndex, MenuItem::leafAction::none);
+       displayNode(selection, childIndex);
      };
     void forward();
     void backward();
@@ -21,5 +19,5 @@ class MenuNavigator
   private:
     MenuItem *selection;
     uint8_t childIndex;
-    menu_display_callback display;
+    menu_display_node displayNode;
 };

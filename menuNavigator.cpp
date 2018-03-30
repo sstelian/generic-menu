@@ -6,10 +6,10 @@ void MenuNavigator::forward()
   {
     selection = selection->child(childIndex);
     childIndex = 0;
-    display(selection, childIndex, MenuItem::leafAction::none);
+    displayNode(selection, childIndex);
     if (!selection->hasChildren()) //leaf selected
     {
-      selection->call();
+      selection->callInitial();
     }
   }
 }
@@ -18,9 +18,13 @@ void MenuNavigator::backward()
 {
   if (selection->hasParent())
   {
+    if (!selection->hasChildren()) //leaf selected
+    {
+      selection->callFinal();
+    }
     childIndex = 0;
     selection = selection->parent();
-    display(selection, childIndex, MenuItem::leafAction::none);
+    displayNode(selection, childIndex);
   }
 }
 
@@ -31,12 +35,11 @@ void MenuNavigator::up()
     if (childIndex > 0)
     {
       childIndex--;
-      display(selection, childIndex, MenuItem::leafAction::none);
+      displayNode(selection, childIndex);
     }
   }else
   {
-    //TODO:add up functionality for leaf
-    cout << "up called on leaf" << endl;
+    selection->callUp();
   }
 }
 
@@ -47,11 +50,10 @@ void MenuNavigator::down()
     if (childIndex < selection->children()->size()-1)
     {
       childIndex++;
-      display(selection, childIndex, MenuItem::leafAction::none);
+      displayNode(selection, childIndex);
     }
   } else
   {
-    //TODO:add down functionality for leaf
-    cout << "down called on leaf" << endl;
+    selection->callDown();
   }
 }

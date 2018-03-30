@@ -11,10 +11,11 @@ int main()
   auto root = make_unique<MenuItem>();
   auto node = make_unique<MenuItem>("strategies");
   auto strats = root->addNode(node);
-
-  node = make_unique<MenuItem>("strategy1",[](){
-    cout << "strategy 1 action" << endl;
-  });
+  
+  auto strategy1Initial = [](){cout << "strategy 1 action" << endl;};
+  auto strategy1Up = [](){cout << "strategy 1 up" << endl;};
+  auto strategy1Down = [](){cout << "strategy 1 down" << endl;};
+  node = make_unique<MenuItem>("strategy1", strategy1Initial, strategy1Up, strategy1Down, nullptr);
   strats->addNode(node);
 
   node = make_unique<MenuItem>("strategy2");
@@ -29,9 +30,7 @@ int main()
   node = make_unique<MenuItem>("line sensors config");
   auto lineSensors = sensorsConfig->addNode(node);
 
-  node = make_unique<MenuItem>("line sensor 1",[](){
-    cout << "line sensor 1 action" << endl;
-  });
+  node = make_unique<MenuItem>("line sensor 1");
   lineSensors->addNode(node);
 
   node = make_unique<MenuItem>("line sensor 2");
@@ -40,33 +39,33 @@ int main()
   node = make_unique<MenuItem>("enemy sensor 1");
   enemySensors->addNode(node);
 
-  auto statusItem = make_unique<MenuItem>("status",[](){
-    cout << "System status : OK" << endl;
-  });
+
+  auto statusInitial = [](){cout << "System status : OK" << endl;};
+  auto statusUp = [](){cout << "Status Up" << endl;};
+  auto statusDown = [](){cout << "Status Down" << endl;};
+  auto statusFinal = [](){cout << "Status Final" << endl;};
+  auto statusItem = make_unique<MenuItem>("status", statusInitial, statusUp, statusDown, statusFinal);
   root->addNode(statusItem);
 
   //menu navigation
   cout << "\033c";
   auto displaySelection = [](MenuItem * const &selection,
-                            int const &selectionIndex,
-                            MenuItem::leafAction const &action){
-          cout << "\033c";
-          if(action==MenuItem::leafAction::none)
+                            int const &selectionIndex){
+          //cout << "\033c";
+          auto ch = selection->children();
+          int index = 0;
+          for(auto it = ch->begin(); it != ch->end(); it++)
           {
-            auto ch = selection->children();
-            int index = 0;
-            for(auto it = ch->begin(); it != ch->end(); it++)
+            if (index == selectionIndex)
             {
-              if (index == selectionIndex)
-              {
-                cout << ">" << (*it)->name() << endl;
-              } else
-              {
-                cout << " " << (*it)->name() << endl;
-              }
-              index++;
+              cout << ">";
+            } else
+            {
+              cout << " ";
             }
-        }
+            cout << (*it)->name() << endl;
+            index++;
+          }
       };
   MenuNavigator navigator(root.get(), displaySelection);
 

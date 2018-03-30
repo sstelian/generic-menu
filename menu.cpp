@@ -12,16 +12,33 @@ std::vector<MenuItem::unique_it_ptr>* MenuItem::children()
   return &m_children;
 }
 
-
 MenuItem* MenuItem::parent()
 {
   return _parent;
 }
 
-void MenuItem::call()
+void MenuItem::callInitial()
 {
-  if (m_action != nullptr)
-    m_action();
+  if (leafInitialAction != nullptr)
+    leafInitialAction();
+}
+
+void MenuItem::callUp()
+{
+  if (leafUp != nullptr)
+    leafUp();
+}
+
+void MenuItem::callDown()
+{
+  if (leafDown != nullptr)
+    leafDown();
+}
+
+void MenuItem::callFinal()
+{
+  if (leafFinal!= nullptr)
+    leafFinal();
 }
 
 bool MenuItem::hasChildren()
