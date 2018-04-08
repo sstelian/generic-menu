@@ -1,23 +1,29 @@
 #pragma once
-#include "menu.hxx"
 #include <iostream>
+#include "json.hpp"
+#include <vector>
+
+using nlohmann::json;
 
 class MenuNavigator
 {
   public:
-    typedef std::function<void(MenuItem* const&, int const&)> menu_display_node;
-    MenuNavigator(MenuItem *root, menu_display_node _displayNode) : selection{root},
-                  childIndex{},
-                  displayNode{_displayNode}
-     {
-       displayNode(selection, childIndex);
-     };
+    MenuNavigator(json &_menu):
+      menu{_menu},
+      history{}
+    {
+        selection = menu;
+        selection_it = selection.begin();
+        displayCurrentView();
+    };
     void forward();
     void backward();
     void up();
     void down();
   private:
-    MenuItem *selection;
-    uint8_t childIndex;
-    menu_display_node displayNode;
+    json &menu;
+    json::iterator selection_it;
+    json selection;
+    std::vector<json> history;
+    void displayCurrentView();
 };

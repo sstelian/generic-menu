@@ -2,73 +2,68 @@
 #include "menu.hxx"
 #include "menuNavigator.hxx"
 #include <vector>
+#include "json.hpp"
 
+using nlohmann::json;
 using namespace std;
+
+/*
+"sensors" : [
+  "line sensors" : [
+    {"line sensor 1" : false, "low threshold" : 100, "high threshold" : 423},
+    {"line sensor 2" : true, "low threshold" : 104, "high threshold" : 893},
+    {"line sensor 3" : true, "low threshold" : 78, "high threshold" : 782},
+    {"line sensor 4" : false, "low threshold" : 167, "high threshold" : 1082}
+  ],
+  "enemy sensors" : [
+    {"enemy sensor 1" : true},
+    {"enemy sensor 2" : false},
+    {"enemy sensor 3" : true},
+    {"enemy sensor 4" : false},
+    {"enemy sensor 5" : true},
+    {"enemy sensor 6" : false},
+    {"enemy sensor 7" : true}
+  ]
+],
+"status" : "ok"
+
+*/
+
+json menu = R"(
+  {
+      "strategies" : [
+        {"strategy1" : false},
+        {"strategy2" : false},
+        {"strategy3" : true}
+      ],
+      "sensors" : [
+        {"line sensors" : [
+          {"line sensor 1" : false, "low threshold" : 100, "high threshold" : 423},
+          {"line sensor 2" : true, "low threshold" : 104, "high threshold" : 893},
+          {"line sensor 3" : true, "low threshold" : 78, "high threshold" : 782},
+          {"line sensor 4" : false, "low threshold" : 167, "high threshold" : 1082}
+        ]},
+        {"enemy sensors" :  [
+          {"enemy sensor 1" : true},
+          {"enemy sensor 2" : false},
+          {"enemy sensor 3" : true},
+          {"enemy sensor 4" : false},
+          {"enemy sensor 5" : true},
+          {"enemy sensor 6" : false},
+          {"enemy sensor 7" : true}
+        ]}
+      ],
+      "status" : "ok"
+  }
+)"_json;
 
 int main()
 {
-  //menu tree initialization
-  auto root = make_unique<MenuItem>();
-  auto node = make_unique<MenuItem>("strategies");
-  auto strats = root->addNode(node);
-  
-  auto strategy1Initial = [](){cout << "strategy 1 action" << endl;};
-  auto strategy1Up = [](){cout << "strategy 1 up" << endl;};
-  auto strategy1Down = [](){cout << "strategy 1 down" << endl;};
-  node = make_unique<MenuItem>("strategy1", strategy1Initial, strategy1Up, strategy1Down, nullptr);
-  strats->addNode(node);
-
-  node = make_unique<MenuItem>("strategy2");
-  strats->addNode(node);
-
-  node = make_unique<MenuItem>("sensors config");
-  auto sensorsConfig = root->addNode(node);
-
-  node = make_unique<MenuItem>("enemy sensors config");
-  auto enemySensors = sensorsConfig->addNode(node);
-
-  node = make_unique<MenuItem>("line sensors config");
-  auto lineSensors = sensorsConfig->addNode(node);
-
-  node = make_unique<MenuItem>("line sensor 1");
-  lineSensors->addNode(node);
-
-  node = make_unique<MenuItem>("line sensor 2");
-  lineSensors->addNode(node);
-
-  node = make_unique<MenuItem>("enemy sensor 1");
-  enemySensors->addNode(node);
-
-
-  auto statusInitial = [](){cout << "System status : OK" << endl;};
-  auto statusUp = [](){cout << "Status Up" << endl;};
-  auto statusDown = [](){cout << "Status Down" << endl;};
-  auto statusFinal = [](){cout << "Status Final" << endl;};
-  auto statusItem = make_unique<MenuItem>("status", statusInitial, statusUp, statusDown, statusFinal);
-  root->addNode(statusItem);
-
-  //menu navigation
-  cout << "\033c";
-  auto displaySelection = [](MenuItem * const &selection,
-                            int const &selectionIndex){
-          //cout << "\033c";
-          auto ch = selection->children();
-          int index = 0;
-          for(auto it = ch->begin(); it != ch->end(); it++)
-          {
-            if (index == selectionIndex)
-            {
-              cout << ">";
-            } else
-            {
-              cout << " ";
-            }
-            cout << (*it)->name() << endl;
-            index++;
-          }
-      };
-  MenuNavigator navigator(root.get(), displaySelection);
-
+  // auto it = menu.begin();
+  // auto sel = *it;
+  // sel = sel[0];
+  // cout << sel.dump(2);
+  MenuNavigator navigator(menu);
   char c = '\0';
   while(c != 'q')
   {
