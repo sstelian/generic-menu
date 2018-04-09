@@ -3,17 +3,17 @@
 #include "json.hpp"
 #include <vector>
 
-using nlohmann::json;
+using json = nlohmann::json;
 
 class MenuNavigator
 {
   public:
     MenuNavigator(json &_menu):
       menu{_menu},
-      history{}
+      history_pointer{},
+      selectionIndex{}
     {
-        selection = menu;
-        selection_it = selection.begin();
+        selection_it = _menu.begin();
         displayCurrentView();
     };
     void forward();
@@ -23,7 +23,10 @@ class MenuNavigator
   private:
     json &menu;
     json::iterator selection_it;
-    json selection;
-    std::vector<json> history;
+    json::json_pointer history_pointer;
+    void pushHistory(std::string key);
+    void pushHistory(int index);
+    void popHistory();
     void displayCurrentView();
+    int selectionIndex;
 };

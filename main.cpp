@@ -4,30 +4,8 @@
 #include <vector>
 #include "json.hpp"
 
-using nlohmann::json;
+using json = nlohmann::json;
 using namespace std;
-
-/*
-"sensors" : [
-  "line sensors" : [
-    {"line sensor 1" : false, "low threshold" : 100, "high threshold" : 423},
-    {"line sensor 2" : true, "low threshold" : 104, "high threshold" : 893},
-    {"line sensor 3" : true, "low threshold" : 78, "high threshold" : 782},
-    {"line sensor 4" : false, "low threshold" : 167, "high threshold" : 1082}
-  ],
-  "enemy sensors" : [
-    {"enemy sensor 1" : true},
-    {"enemy sensor 2" : false},
-    {"enemy sensor 3" : true},
-    {"enemy sensor 4" : false},
-    {"enemy sensor 5" : true},
-    {"enemy sensor 6" : false},
-    {"enemy sensor 7" : true}
-  ]
-],
-"status" : "ok"
-
-*/
 
 json menu = R"(
   {
