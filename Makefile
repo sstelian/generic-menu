@@ -4,7 +4,8 @@ LDFLAGS =
 OBJFILES = json.o menuNavigator.o main.o
 TARGET = main
 
-all: src link
+fast: src link
+all : lib src link
 lib:
 	$(CC) $(CFLAGS) -x c++ json.hpp
 src:

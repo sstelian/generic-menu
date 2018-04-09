@@ -1,7 +1,8 @@
 #pragma once
 #include <iostream>
 #include "json.hpp"
-#include <vector>
+
+//TODO: remove iostream
 
 using json = nlohmann::json;
 
@@ -11,15 +12,21 @@ class MenuNavigator
     MenuNavigator(json &_menu):
       menu{_menu},
       history_pointer{},
-      selectionIndex{}
+      selectionIndex{},
+      _done{false}
     {
         selection_it = _menu.begin();
         displayCurrentView();
     };
+    ~MenuNavigator()
+    {
+      std::cout << "navigator deleted" << std::endl;
+    }
     void forward();
     void backward();
     void up();
     void down();
+    bool done();
   private:
     json &menu;
     json::iterator selection_it;
@@ -28,5 +35,7 @@ class MenuNavigator
     void pushHistory(int index);
     void popHistory();
     void displayCurrentView();
+    json &selection();
     int selectionIndex;
+    bool _done;
 };

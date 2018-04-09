@@ -9,26 +9,26 @@ using namespace std;
 
 json menu = R"(
   {
-      "strategies" : [
-        {"strategy1" : false},
-        {"strategy2" : false},
-        {"strategy3" : true}
+      "options" : [
+        {"option1" : false},
+        {"option2" : false},
+        {"option3" : true}
       ],
       "sensors" : [
-        {"line sensors" : [
-          {"line sensor 1" : false, "low threshold" : 100, "high threshold" : 423},
-          {"line sensor 2" : true, "low threshold" : 104, "high threshold" : 893},
-          {"line sensor 3" : true, "low threshold" : 78, "high threshold" : 782},
-          {"line sensor 4" : false, "low threshold" : 167, "high threshold" : 1082}
+        {"analog sensors" : [
+          {"analog sensor 1" : false, "low threshold" : 100, "high threshold" : 423},
+          {"analog sensor 2" : true, "low threshold" : 104, "high threshold" : 893},
+          {"analog sensor 3" : true, "low threshold" : 78, "high threshold" : 782},
+          {"analog sensor 4" : false, "low threshold" : 167, "high threshold" : 1082}
         ]},
-        {"enemy sensors" :  [
-          {"enemy sensor 1" : true},
-          {"enemy sensor 2" : false},
-          {"enemy sensor 3" : true},
-          {"enemy sensor 4" : false},
-          {"enemy sensor 5" : true},
-          {"enemy sensor 6" : false},
-          {"enemy sensor 7" : true}
+        {"digital sensors" :  [
+          {"digital sensor 1" : true},
+          {"digital sensor 2" : false},
+          {"digital sensor 3" : true},
+          {"digital sensor 4" : false},
+          {"digital sensor 5" : true},
+          {"digital sensor 6" : false},
+          {"digital sensor 7" : true}
         ]}
       ],
       "status" : "ok"
@@ -37,13 +37,9 @@ json menu = R"(
 
 int main()
 {
-  // auto it = menu.begin();
-  // auto sel = *it;
-  // sel = sel[0];
-  // cout << sel.dump(2);
   MenuNavigator navigator(menu);
   char c = '\0';
-  while(c != 'q')
+  while((c != 'q') && !navigator.done())
   {
     cin >> c;
     switch(c)
@@ -70,5 +66,8 @@ int main()
       }
     }
   }
+  cout << endl << endl << "Menu setup complete." << endl;
+  cout << "Menu dump :" << endl;
+  cout << menu.dump(2);
   return 0;
 }
