@@ -18,10 +18,6 @@ class MenuNavigator
         selection_it = _menu.begin();
         displayCurrentView();
     };
-    ~MenuNavigator()
-    {
-      std::cout << "navigator deleted" << std::endl;
-    }
     void forward();
     void backward();
     void up();

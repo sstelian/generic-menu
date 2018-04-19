@@ -1,6 +1,9 @@
 #include "menuNavigator.hxx"
 
+//#define MENU_DEBUG
+
 //TODO: remove std::cout
+//TODO: display dependecy injection
 using namespace std;
 
 //selected options are appended to the json_pointer
@@ -16,6 +19,11 @@ void MenuNavigator::forward()
     pushHistory(selectionIndex);
   }
   selection_it = selection().begin();
+  if ((selection().is_object()) && (selection().size() == 1)) //skip redundant step
+  {
+    pushHistory(selection_it.key());
+    selection_it = selection().begin();
+  }
   displayCurrentView();
   selectionIndex = 0;
 }
@@ -27,6 +35,11 @@ void MenuNavigator::backward()
   {
     popHistory();
     selection_it = selection().begin();
+    if ((selection().is_object()) && (selection().size() == 1)) //skip redundant step
+    {
+      popHistory();
+      selection_it = selection().begin();
+    }
     displayCurrentView();
   } else
   {
@@ -50,6 +63,9 @@ void MenuNavigator::up()
     else
     if (selection().is_boolean())
       selection() = !(selection().get<bool>());
+    else
+    if (selection().is_number_float())
+      selection() = selection().get<float>()+0.5;
   }
   displayCurrentView();
 }
@@ -63,11 +79,14 @@ void MenuNavigator::down()
   }
   else
   {
-    if (selection().is_number())
+    if (selection().is_number_integer())
       selection() = selection().get<int>()-1;
     else
     if (selection().is_boolean())
       selection() = !(selection().get<bool>());
+    else
+    if (selection().is_number_float())
+      selection() = selection().get<float>()-0.5;
   }
   displayCurrentView();
 }
@@ -79,8 +98,12 @@ bool MenuNavigator::done()
 
 void MenuNavigator::displayCurrentView()
 {
-  //cout << "\033c";
-  cout << endl << endl;
+  #ifdef MENU_DEBUG
+    cout << endl << endl;
+  #else
+    cout << "\033c";
+  #endif
+
   //display each key:value pair of object
   if (selection().is_object())
   {
@@ -91,7 +114,11 @@ void MenuNavigator::displayCurrentView()
         cout << ">";
         else
         cout << " ";
-      cout << it.key() << " : " << it.value() << endl;
+      #ifdef MENU_DEBUG
+        cout << it.key() << " : " << it.value() << endl;
+      #else
+      cout << it.key() << endl;
+      #endif
     }
   } else
   //display each key:value pair of each element of the array
@@ -105,7 +132,11 @@ void MenuNavigator::displayCurrentView()
           cout << ">";
           else
           cout << " ";
-        cout << el.key() << " : " << el.value() << endl;
+        #ifdef MENU_DEBUG
+          cout << el.key() << " : " << el.value() << endl;
+        #else
+          cout << el.key() << endl;
+        #endif
       }
     }
   } else

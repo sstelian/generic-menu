@@ -13,3 +13,5 @@ src:
 	$(CC) $(CFLAGS) menuNavigator.cpp
 link:
 	$(CC) $(OBJFILES) -o $(TARGET)
+clean:
+	rm $(TARGET) $(OBJFILES)
