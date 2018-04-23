@@ -3,6 +3,7 @@
 !*.TXT
 !*.c
 !*.cpp
+!*.hpp
 !*.h
 !*.hxx
 !*.gitignore
