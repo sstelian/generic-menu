@@ -34,4 +34,9 @@ class MenuNavigator
     json &selection();
     int selectionIndex;
     bool _done;
+
+    static bool contains_element(json& _json, std::string element)
+    {
+      return (_json.find(element) != _json.end());
+    }
 };

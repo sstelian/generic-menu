@@ -12,18 +12,31 @@ void MenuNavigator::forward()
 {
   if (selection().is_object())
   {
+    // handle regular object
     pushHistory(selection_it.key());
+    selection_it = selection().begin();
+
+    // handle predefined list
+    if (contains_element(selection(), "_predefined_list") && (contains_element(selection(), "_selection")))
+    {
+      pushHistory("_predefined_list");
+      selection_it = selection().begin();
+    }
   } else
-  if (selection().is_array())
+  // handle arrays but do not allow changing elements in a predefined list
+  if (selection().is_array() && (history_pointer.to_string().find("_predefined_list") == std::string::npos))
   {
     pushHistory(selectionIndex);
+    selection_it = selection().begin();
   }
-  selection_it = selection().begin();
-  if ((selection().is_object()) && (selection().size() == 1)) //skip redundant step
+
+  // skip redundant step
+  if ((selection().is_object()) && (selection().size() == 1))
   {
     pushHistory(selection_it.key());
     selection_it = selection().begin();
   }
+
   displayCurrentView();
   selectionIndex = 0;
 }
@@ -34,7 +47,28 @@ void MenuNavigator::backward()
   if (history_pointer.to_string() != "")
   {
     popHistory();
+    
+    // save old selection iterator for predefined lists handling
+    auto old_selection_it = selection_it;
     selection_it = selection().begin();
+
+    // handle predefined list
+    if (selection().is_object() && contains_element(selection(), "_predefined_list") && (contains_element(selection(), "_selection")))
+    {
+      // save predefined list selection
+      string predefinedListSelection = (*old_selection_it).dump();
+      // remove all double-quote characters
+      predefinedListSelection.erase(
+        remove(predefinedListSelection.begin(), predefinedListSelection.end(), '\"'),
+        predefinedListSelection.end()
+      );
+      selection()["_selection"] = predefinedListSelection;
+
+      // hide predefined list implementation from menu
+      popHistory();
+      selection_it = selection().begin();
+    }
+
     if ((selection().is_object()) && (selection().size() == 1)) //skip redundant step
     {
       popHistory();
@@ -124,22 +158,15 @@ void MenuNavigator::displayCurrentView()
   //display each key:value pair of each element of the array
   if (selection().is_array())
   {
-    for (json::iterator array_el = selection().begin(); array_el != selection().end(); ++array_el)
+    for (json::iterator element = selection().begin(); element != selection().end(); ++element)
     {
-      for (json::iterator el = array_el->begin(); el != array_el->end(); ++el)
-      {
-        if (selection_it == array_el)
-          cout << ">";
-          else
-          cout << " ";
-        #ifdef MENU_DEBUG
-          cout << el.key() << " : " << el.value() << endl;
-        #else
-          cout << el.key() << endl;
-        #endif
-      }
+      if (selection_it == element)
+        cout << ">";
+        else
+        cout << " ";
+        cout << (*element).dump() << endl;
     }
-  } else
+  } else // selection is primitive
   {
     cout << selection();
   }

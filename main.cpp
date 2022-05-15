@@ -8,29 +8,30 @@ using namespace std;
 
 json menu = R"(
   {
-      "options" : [
-        {"option1" : false},
-        {"option2" : false},
-        {"option3" : true}
-      ],
-      "sensors" : [
-        {"analog sensors" : [
-          {"analog sensor 1" : false, "low threshold" : 100, "high threshold" : 423},
-          {"analog sensor 2" : true, "low threshold" : 104, "high threshold" : 893},
-          {"analog sensor 3" : true, "low threshold" : 78, "high threshold" : 782},
-          {"analog sensor 4" : false, "low threshold" : 167, "high threshold" : 1082}
-        ]},
-        {"digital sensors" :  [
-          {"digital sensor 1" : true},
-          {"digital sensor 2" : false},
-          {"digital sensor 3" : true},
-          {"digital sensor 4" : false},
-          {"digital sensor 5" : true},
-          {"digital sensor 6" : false},
-          {"digital sensor 7" : true}
-        ]}
-      ],
-      "status" : "ok"
+      "bluetooth_config" : false,
+      "color" :
+        {
+          "_selection" : "",
+          "_predefined_list" : ["blue", "orange", "red"]
+        },
+      "regular_list" : ["element 1", "element 2"],
+      "light_sensors_enabled" :
+        {
+          "front_left" : true,
+          "front_right" : true,
+          "back_left" : true,
+          "back_right" : true
+        },
+      "smoke_sensors_enabled" :
+          {
+            "0" : true,
+            "1" : true,
+            "2" : true,
+            "3" : true,
+            "4" : true,
+            "5" : true,
+            "6" : true
+          }
   }
 )"_json;
 
